@@ -1,10 +1,19 @@
 import React from "react";
-import { NativeBaseProvider, Box } from "native-base";
+import { NativeBaseProvider, Box, extendTheme } from "native-base";
+import { themes } from "./src/constants";
+import { NewLoad } from "./src/pages/NewLoad";
+
+type ThemeArgs = Parameters<typeof extendTheme>
+
+export type ThemeProps = ThemeArgs[0] & ThemeArgs[1]
 
 export default function App() {
+
+    const theme = extendTheme(themes)
+
     return (
-        <NativeBaseProvider>
-            <Box flex={1} justifyContent="center" alignItems="center" >Hello world</Box>
+        <NativeBaseProvider theme={theme}>
+            <NewLoad />
         </NativeBaseProvider>
     );
 }
