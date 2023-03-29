@@ -3,27 +3,46 @@ import { AntDesign } from '@expo/vector-icons';
 import { Button } from './Button'
 import { ElementRef, useReducer, useRef, useState } from 'react';
 import SignatureScreen from 'react-native-signature-canvas';
+import * as FileSystem from "expo-file-system";
 
-export const Signature = () => {
+type SignatureProps = {
+    onFileSave: (file: FileSystem.FileInfo) => void
+}
+
+export const Signature = ({ onFileSave }: SignatureProps) => {
     const [show, toggle] = useReducer(s => !s, false);
     const [signatureHeight, setSignatureHeight] = useState(0)
     const ref = useRef<ElementRef<typeof SignatureScreen>>();
 
     const handleEnd = () => {
-        console.log("handleEnd")
-        ref.current.readSignature();
+        ref.current.readSignature()
     };
 
-    const handleData = (data) => {
-        console.log("handleData")
-        toggle()
-        console.log(data);
-    };
+
+    const handleOk = async (signature: string) => {
+
+        const path = FileSystem.cacheDirectory + `${Date.now().toString()}.png`;
+
+        await FileSystem.writeAsStringAsync(
+            path,
+            signature.replace("data:image/png;base64,", ""),
+            { encoding: FileSystem.EncodingType.Base64 }
+        )
+
+        try {
+            const file = await FileSystem.getInfoAsync(path)
+            onFileSave(file);
+        } catch (error) {
+            console.log({ error })
+        } finally {
+            toggle()
+        }
+
+    }
 
 
     return (
         <>
-
             <Button
                 onPress={toggle}
                 endIcon={<Icon
@@ -37,7 +56,6 @@ export const Signature = () => {
             </Button>
             <Modal isOpen={show} animationPreset={'slide'}>
                 <Modal.Content h="full" w="full">
-
                     <Pressable
                         onPress={toggle}
                         position="absolute"
@@ -50,7 +68,7 @@ export const Signature = () => {
                     <Box h="full" w="full" onLayout={(e) => setSignatureHeight(e.nativeEvent.layout.height)}>
                         <SignatureScreen
                             ref={ref}
-                            descriptionText={"TEXTO DE descriptionText"}
+                            onOK={handleOk}
                             webStyle={` 
                                 .m-signature-pad {
                                     margin:0;
@@ -83,7 +101,7 @@ export const Signature = () => {
                         bottom={10}
                         w="full"
                     >
-                        <Button bgColor={'yellow'} onPress={handleData}>Salvar</Button>
+                        <Button bgColor={'yellow'} onPress={handleEnd}>Salvar</Button>
                     </Box>
                 </Modal.Content>
 

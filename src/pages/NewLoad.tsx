@@ -28,7 +28,7 @@ export const NewLoad = () => {
                 <SelectionButton title="Selecione o Material" />
                 <Input placeholder={"Digite a quantidade"} keyboardType="numeric" />
                 <Option />
-                <Signature />
+                <Signature onFileSave={console.log}/>
                 <Button
                     bgColor={"yellow"}
                     _text={{
