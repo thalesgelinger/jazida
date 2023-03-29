@@ -1,13 +1,14 @@
 import { Box, Button as NativeButton, IButtonProps } from "native-base"
 
-export const Button = ({ children, ...rest }: IButtonProps) => {
+export const Button = ({ children, height = '45px', ...rest }: IButtonProps) => {
     return (
         <Box
-            height={"45px"}
+            height={height}
             width="full"
             maxWidth={'275px'}
             position="relative"
             rounded={"md"}
+            m={"16px"}
         >
             <NativeButton
                 bgColor={"white"}

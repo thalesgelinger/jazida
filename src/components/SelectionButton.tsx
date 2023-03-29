@@ -5,9 +5,10 @@ import { Input } from './Input';
 import { useReducer, useState } from 'react';
 
 type SelectorProps = {
-    title: string
+    title: string;
+    onSelect: (option: any) => void
 }
-export const SelectionButton = ({ title }: SelectorProps) => {
+export const SelectionButton = ({ title, onSelect }: SelectorProps) => {
     const [show, toggle] = useReducer(s => !s, false)
     const [selected, setSelected] = useState<string>()
     const [options, setOptions] = useState([
@@ -26,6 +27,7 @@ export const SelectionButton = ({ title }: SelectorProps) => {
     const handleSelectedOption = (item: typeof options[0]) => () => {
         toggle();
         setSelected(item)
+        onSelect(item)
     }
 
     return (

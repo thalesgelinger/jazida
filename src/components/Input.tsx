@@ -9,6 +9,7 @@ export const Input = ({ ...rest }: IInputProps) => {
             maxWidth={'275px'}
             position="relative"
             rounded={"md"}
+            m={"16px"}
         >
             <NativeInput
                 bgColor={"white"}

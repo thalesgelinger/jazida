@@ -1,11 +1,35 @@
-import { Box, Flex, Heading, } from "native-base"
+import { useState } from "react"
+import { Box, Flex, Heading, ScrollView, } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
 import { Option } from "../components/Option"
 import { Button } from "../components/Button"
 import { Signature } from "../components/Signature"
+import * as FileSystem from "expo-file-system";
 
 export const NewLoad = () => {
+    const [client, setClient] = useState('')
+    const [plate, setPlate] = useState('')
+    const [material, setMaterial] = useState('')
+    const [quantity, setQuantity] = useState('')
+    const [paymentMethod, setPaymentMethod] = useState('')
+    const [signature, setSignature] = useState<FileSystem.FileInfo>()
+
+    const canConfirm = !!client && !!plate && !!material && !!quantity && !!paymentMethod && !!signature;
+
+    const handleConfirm = () => {
+        const load = {
+            client,
+            plate,
+            material,
+            quantity,
+            paymentMethod,
+            signature
+        }
+        console.log({ load })
+
+    }
+
     return (
         <Box flex={1} bgColor={"gray"}>
             <Box
@@ -17,28 +41,42 @@ export const NewLoad = () => {
             >
                 <Heading>Carregar</Heading>
             </Box>
-            <Flex
-                alignItems={'center'}
-                flex="1"
-                width="full"
-                justifyContent={"space-around"}
+            <ScrollView
+                h="full"
+                w="full"
+                _contentContainerStyle={{
+                    alignItems: 'center',
+                    justifyContent: "space-between",
+                }}
             >
-                <SelectionButton title="Selecione o Cliente" />
-                <SelectionButton title="Selecione a Placa" />
-                <SelectionButton title="Selecione o Material" />
-                <Input placeholder={"Digite a quantidade"} keyboardType="numeric" />
-                <Option />
-                <Signature onFileSave={console.log}/>
+                <SelectionButton title="Selecione o Cliente" onSelect={setClient} />
+                <SelectionButton title="Selecione a Placa" onSelect={setPlate} />
+                <SelectionButton title="Selecione o Material" onSelect={setMaterial} />
+                <Input
+                    placeholder={"Digite a quantidade"}
+                    keyboardType="numeric"
+                    onChangeText={setQuantity} />
+                <Option onOption={setPaymentMethod} />
+                <Signature onFileSave={setSignature} />
+
+
+            </ScrollView>
+            <Box w="full" alignItems={'center'}>
                 <Button
                     bgColor={"yellow"}
                     _text={{
                         bold: true,
                         color: 'black'
                     }}
+                    opacity={canConfirm ? 1 : 0.6}
+                    right={canConfirm ? 0 : -4}
+                    bottom={canConfirm ? 0 : -4}
+                    disabled={!canConfirm}
+                    onPress={handleConfirm}
                 >
                     Confirmar
                 </Button>
-            </Flex>
+            </Box>
         </Box>
     )
 }

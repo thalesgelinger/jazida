@@ -1,4 +1,4 @@
-import { Box, Icon, Modal, Pressable } from 'native-base'
+import { Box, Icon, Image, Modal, Pressable } from 'native-base'
 import { AntDesign } from '@expo/vector-icons';
 import { Button } from './Button'
 import { ElementRef, useReducer, useRef, useState } from 'react';
@@ -12,6 +12,9 @@ type SignatureProps = {
 export const Signature = ({ onFileSave }: SignatureProps) => {
     const [show, toggle] = useReducer(s => !s, false);
     const [signatureHeight, setSignatureHeight] = useState(0)
+
+    const [signature, setSignature] = useState('');
+
     const ref = useRef<ElementRef<typeof SignatureScreen>>();
 
     const handleEnd = () => {
@@ -31,6 +34,7 @@ export const Signature = ({ onFileSave }: SignatureProps) => {
 
         try {
             const file = await FileSystem.getInfoAsync(path)
+            setSignature(file.uri)
             onFileSave(file);
         } catch (error) {
             console.log({ error })
@@ -45,14 +49,26 @@ export const Signature = ({ onFileSave }: SignatureProps) => {
         <>
             <Button
                 onPress={toggle}
-                endIcon={<Icon
+                height={signature ? 200 : '45px'}
+                endIcon={!signature && <Icon
                     as={AntDesign}
                     name="right"
                     size="sm"
                     color={"black"}
                 />}
             >
-                Assinar
+
+                {signature ? <Image
+                    source={{
+                        uri: signature,
+                    }}
+                    style={{ height: 200, width: 200 }}
+                    alt="Signature"
+                /> :
+                    <>
+                        Assinar
+                    </>
+                }
             </Button>
             <Modal isOpen={show} animationPreset={'slide'}>
                 <Modal.Content h="full" w="full">

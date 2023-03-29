@@ -1,11 +1,19 @@
 import { Box, Button } from "native-base";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const Option = () => {
+type OptionProps = {
+    onOption: (option: string) => void
+}
+export const Option = ({ onOption} : OptionProps) => {
     const [selected, setSelected] = useState<'cash' | 'term'>('cash')
+
+    useEffect(() => {
+        onOption(selected)
+    },[]) 
 
     const toggle = (selected: 'cash' | 'term') => () => {
         setSelected(selected)
+        onOption(selected)
     }
 
     return (
@@ -16,6 +24,7 @@ export const Option = () => {
             maxWidth={'275px'}
             position="relative"
             rounded={"md"}
+            m={"16px"}
         >
             <Button.Group isAttached
                 height={"45px"}
