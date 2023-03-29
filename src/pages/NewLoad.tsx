@@ -6,8 +6,21 @@ import { Option } from "../components/Option"
 import { Button } from "../components/Button"
 import { Signature } from "../components/Signature"
 import * as FileSystem from "expo-file-system";
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
+import { RootStackParams } from "../router"
 
-export const NewLoad = () => {
+type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
+
+export type LoadType = {
+    client: string,
+    plate: string,
+    material: string,
+    quantity: string,
+    paymentMethod: string,
+    signature: FileSystem.FileInfo
+}
+
+export const NewLoad = ({ navigation }: NewLoadProps) => {
     const [client, setClient] = useState('')
     const [plate, setPlate] = useState('')
     const [material, setMaterial] = useState('')
@@ -27,7 +40,7 @@ export const NewLoad = () => {
             signature
         }
         console.log({ load })
-
+        navigation.push("Review", { load })
     }
 
     return (
