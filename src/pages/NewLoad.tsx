@@ -3,6 +3,7 @@ import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
 import { Option } from "../components/Option"
 import { Button } from "../components/Button"
+import { Signature } from "../components/Signature"
 
 export const NewLoad = () => {
     return (
@@ -27,7 +28,7 @@ export const NewLoad = () => {
                 <SelectionButton title="Selecione o Material" />
                 <Input placeholder={"Digite a quantidade"} keyboardType="numeric" />
                 <Option />
-                <SelectionButton title="Assinar" />
+                <Signature />
                 <Button
                     bgColor={"yellow"}
                     _text={{
