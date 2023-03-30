@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, Flex, Heading, ScrollView, } from "native-base"
+import { Box, Flex, Heading, Icon, Pressable, ScrollView, Text, } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
 import { Option } from "../components/Option"
@@ -8,6 +8,7 @@ import { Signature } from "../components/Signature"
 import * as FileSystem from "expo-file-system";
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { RootStackParams } from "../router"
+import { AntDesign } from '@expo/vector-icons';
 
 type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
 
@@ -20,7 +21,7 @@ export type LoadType = {
     signature: FileSystem.FileInfo
 }
 
-export const NewLoad = ({ navigation }: NewLoadProps) => {
+export const NewLoad = ({ navigation, route }: NewLoadProps) => {
     const [client, setClient] = useState('')
     const [plate, setPlate] = useState('')
     const [material, setMaterial] = useState('')
@@ -43,6 +44,10 @@ export const NewLoad = ({ navigation }: NewLoadProps) => {
         navigation.push("Review", { load })
     }
 
+    const goToLoadings = () => {
+        navigation.navigate("History")
+    }
+
     return (
         <Box flex={1} bgColor={"gray"}>
             <Box
@@ -52,7 +57,27 @@ export const NewLoad = ({ navigation }: NewLoadProps) => {
                 alignItems={"center"}
                 justifyContent={"center"}
             >
+                <Pressable
+                    onPress={navigation.goBack}
+                    position="absolute"
+                    zIndex={10}
+                    left={4}
+                    alignItems="center"
+                    justifyContent={"center"}
+                >
+                    <Icon as={AntDesign} name="arrowleft" size={"24px"} color="black" />
+                </Pressable>
                 <Heading>Carregar</Heading>
+                {route.params?.admin && <Pressable
+                    onPress={goToLoadings}
+                    position="absolute"
+                    zIndex={10}
+                    right={4}
+                    alignItems="center"
+                    justifyContent={"center"}
+                >
+                    <Text>Histórico</Text>
+                </Pressable>}
             </Box>
             <ScrollView
                 h="full"
