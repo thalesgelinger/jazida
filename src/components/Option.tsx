@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 type OptionProps = {
     onOption: (option: string) => void
 }
-export const Option = ({ onOption} : OptionProps) => {
+export const Option = ({ onOption }: OptionProps) => {
     const [selected, setSelected] = useState<'cash' | 'term'>('cash')
 
     useEffect(() => {
         onOption(selected)
-    },[]) 
+    }, [])
 
     const toggle = (selected: 'cash' | 'term') => () => {
         setSelected(selected)
