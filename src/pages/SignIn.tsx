@@ -1,6 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Box } from 'native-base'
 import { Image } from 'react-native'
+import { useQuery } from 'react-query'
+import { adminSignIn } from '../../functions/lib'
 import truck from '../assets/truck.png'
 import { Button } from '../components/Button'
 import { RootStackParams } from '../router'

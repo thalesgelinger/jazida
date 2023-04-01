@@ -15,11 +15,14 @@
             "**/*"
         ],
         "android": {
-            "googleServicesFile": "./google-services.json",
             "adaptiveIcon": {
                 "foregroundImage": "./assets/adaptive-icon.png",
                 "backgroundColor": "#ffffff"
-            }
+            },
+            "package": "com.gelinger.jazida"
+        },
+        "ios": {
+            "bundleIdentifier": "com.gelinger.jazida"
         },
         "plugins": [
             "@react-native-firebase/app"

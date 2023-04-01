@@ -7,16 +7,23 @@ import { Input } from '../components/Input'
 import { RootStackParams } from '../router'
 import truck from '../assets/truck.png'
 
+import { adminSignIn } from '../services/admin'
+
 type AdminProps = NativeStackScreenProps<RootStackParams, "Admin">
 
 export const Admin = ({ navigation }: AdminProps) => {
     const [name, setName] = useState('')
     const [password, setPassword] = useState('')
 
-    const signIn = () => {
-        console.log({
-            name, password
-        })
+    const signIn = async () => {
+        const logged = await adminSignIn(name, password);
+        console.log({ logged })
+
+        if (!logged) {
+            console.log("Não logado")
+            return 
+        }
+
         navigation.pop()
         navigation.navigate('NewLoad', {
             admin: true
