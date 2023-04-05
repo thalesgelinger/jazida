@@ -40,7 +40,6 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             paymentMethod,
             signature
         }
-        console.log({ load })
         navigation.push("Review", { load })
     }
 

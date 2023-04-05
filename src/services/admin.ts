@@ -5,7 +5,7 @@ export const adminSignIn = async (name: string, password: string) => {
         await api.post("/adminSignIn", { name, password })
         return true
     } catch (error) {
-        console.log({ error})
+        console.log({ error })
         return false
     }
 }

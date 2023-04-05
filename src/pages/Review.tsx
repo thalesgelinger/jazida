@@ -3,6 +3,7 @@ import { Box, Flex, Heading, Icon, Image, Pressable, Text } from 'native-base'
 import { RootStackParams } from '../router';
 import { AntDesign } from '@expo/vector-icons';
 import { Button } from '../components/Button';
+import { useLoad } from '../hooks/useLoad';
 
 
 type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
@@ -10,7 +11,11 @@ type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
 export const Review = ({ route, navigation }: ReviewProps) => {
     const load = route.params.load
 
+    const { sendLoad } = useLoad();
+
     const send = () => {
+
+        sendLoad(load)
 
     }
 
