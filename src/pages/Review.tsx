@@ -3,7 +3,11 @@ import { Box, Flex, Heading, Icon, Image, Pressable, Text } from 'native-base'
 import { RootStackParams } from '../router';
 import { AntDesign } from '@expo/vector-icons';
 import { Button } from '../components/Button';
-import { useLoad } from '../hooks/useLoad';
+import { saveLoad } from '../services/loads';
+import { Unconnected } from '../components/Unconnected';
+import { NotSendedLoads } from '../components/NotSendedLoads';
+import { useState } from 'react';
+import { FullLoader } from '../components/FullLoader';
 
 
 type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
@@ -11,16 +15,18 @@ type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
 export const Review = ({ route, navigation }: ReviewProps) => {
     const load = route.params.load
 
-    const { sendLoad } = useLoad();
+    const [loading, setLoading] = useState(false)
 
-    const send = () => {
-
-        sendLoad(load)
-
+    const send = async () => {
+        setLoading(true)
+        await saveLoad(load)
+        setLoading(false)
+        navigation.goBack()
     }
 
     return (
         <Box h="full" bgColor={"gray"}>
+        { loading && <FullLoader />}
             <Box
                 backgroundColor={"yellow"}
                 height={"80px"}
@@ -40,6 +46,8 @@ export const Review = ({ route, navigation }: ReviewProps) => {
                 </Pressable>
                 <Heading>Revisar</Heading>
             </Box>
+            <Unconnected />
+            <NotSendedLoads />
             <Flex alignItems={"center"} h="full" flex={1}>
 
                 <Box

@@ -1,15 +1,26 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Box } from 'native-base'
+import { useEffect } from 'react'
 import { Image } from 'react-native'
-import { useQuery } from 'react-query'
-import { adminSignIn } from '../../functions/lib'
 import truck from '../assets/truck.png'
 import { Button } from '../components/Button'
 import { RootStackParams } from '../router'
+import { getLoginType, setLoginType } from '../services/admin'
 
 type SignInProps = NativeStackScreenProps<RootStackParams, "SignIn">
 
 export const SignIn = ({ navigation }: SignInProps) => {
+
+    useEffect(() => {
+        const logType = getLoginType();
+
+        if (!!logType) {
+            navigation.navigate('NewLoad', {
+                admin: logType === 'admin'
+            })
+        }
+
+    }, [])
 
 
     const signInAdmin = () => {
@@ -17,6 +28,7 @@ export const SignIn = ({ navigation }: SignInProps) => {
     }
 
     const signInLoader = () => {
+        setLoginType('loader')
         navigation.navigate('NewLoad')
     }
 

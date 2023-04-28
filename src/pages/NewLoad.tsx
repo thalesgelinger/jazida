@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Box, Flex, Heading, Icon, Pressable, ScrollView, Text, } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
@@ -9,6 +9,10 @@ import * as FileSystem from "expo-file-system";
 import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { RootStackParams } from "../router"
 import { AntDesign } from '@expo/vector-icons';
+import { Unconnected } from "../components/Unconnected"
+import { getLoadsNotSended } from "../services/loads"
+import { NotSendedLoads } from "../components/NotSendedLoads"
+import { deleteLoginType } from "../services/admin"
 
 type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
 
@@ -27,7 +31,7 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
     const [material, setMaterial] = useState('')
     const [quantity, setQuantity] = useState('')
     const [paymentMethod, setPaymentMethod] = useState('')
-    const [signature, setSignature] = useState<FileSystem.FileInfo>()
+    const [signature, setSignature] = useState<FileSystem.FileInfo | null>()
 
     const canConfirm = !!client && !!plate && !!material && !!quantity && !!paymentMethod && !!signature;
 
@@ -40,11 +44,25 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             paymentMethod,
             signature
         }
+        cleanStates()
         navigation.push("Review", { load })
+    }
+
+    const cleanStates = () => {
+        setClient('')
+        setPlate('')
+        setMaterial('')
+        setQuantity('')
+        setSignature(null)
     }
 
     const goToLoadings = () => {
         navigation.navigate("History")
+    }
+
+    const handleGoOut = () => {
+        deleteLoginType()
+        navigation.goBack()
     }
 
     return (
@@ -57,7 +75,7 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
                 justifyContent={"center"}
             >
                 <Pressable
-                    onPress={navigation.goBack}
+                    onPress={handleGoOut}
                     position="absolute"
                     zIndex={10}
                     left={4}
@@ -67,6 +85,7 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
                     <Icon as={AntDesign} name="arrowleft" size={"24px"} color="black" />
                 </Pressable>
                 <Heading>Carregar</Heading>
+
                 {route.params?.admin && <Pressable
                     onPress={goToLoadings}
                     position="absolute"
@@ -78,6 +97,11 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
                     <Text>Histórico</Text>
                 </Pressable>}
             </Box>
+
+            <Unconnected />
+            <NotSendedLoads />
+
+
             <ScrollView
                 h="full"
                 w="full"

@@ -1,4 +1,4 @@
-import { Box, FlatList, Icon, Modal, Pressable } from 'native-base'
+import { Box, FlatList, Flex, Icon, Modal, Pressable } from 'native-base'
 import { AntDesign } from '@expo/vector-icons';
 import { Button } from './Button'
 import { Input } from './Input';
@@ -52,6 +52,8 @@ export const SelectionButton = ({ title, onSelect }: SelectorProps) => {
                     width={"full"}
                     height={"full"}
                     backgroundColor="gray"
+                    marginBottom={0}
+                    marginTop="auto"
                 >
                     <Modal.Header
                         width={"full"}
@@ -73,21 +75,23 @@ export const SelectionButton = ({ title, onSelect }: SelectorProps) => {
                             />}
                         />
                     </Modal.Header>
-                    <Modal.Body alignItems={'center'} height={'full'}>
-                        <FlatList
-                            height={"full"}
-                            data={filteredOptions}
-                            renderItem={({ item }) =>
-                                <Button
-                                    minW={"270px"}
-                                    onPress={handleSelectedOption(item)}
-                                >
-                                    {item}
-                                </Button>
-                            }
-                            keyExtractor={(item) => item.toString()}
-                            ItemSeparatorComponent={() => <Box height={"10px"} />}
-                        />
+                    <Modal.Body alignItems={'center'} height={'full'} >
+                        <Flex>
+                            <FlatList
+                                height={"full"}
+                                data={filteredOptions}
+                                renderItem={({ item }) =>
+                                    <Button
+                                        minW={"270px"}
+                                        onPress={handleSelectedOption(item)}
+                                    >
+                                        {item}
+                                    </Button>
+                                }
+                                keyExtractor={(item) => item.toString()}
+                                ItemSeparatorComponent={() => <Box height={"10px"} />}
+                            />
+                        </Flex>
                     </Modal.Body>
                 </Modal.Content>
             </Modal>

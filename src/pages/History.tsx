@@ -3,11 +3,24 @@ import { Box, FlatList, Heading, Icon, Pressable } from 'native-base'
 import { RootStackParams } from '../router';
 import { AntDesign } from '@expo/vector-icons';
 import { Input } from '../components/Input';
+import { Button as NativeButton } from "native-base"
 import { Button } from '../components/Button';
+import { useEffect, useState } from 'react';
+import { getLoads } from '../services/loads';
+import { LoadType } from './NewLoad';
 
 type HistoryProps = NativeStackScreenProps<RootStackParams, 'History'>;
 
 export const History = ({ navigation }: HistoryProps) => {
+    const [loads, setLoads] = useState<LoadType[]>([])
+
+    useEffect(() => {
+        getLoads().then(loads => {
+            console.log({ loads })
+            setLoads(loads)
+        });
+    }, [])
+
     return (
         <Box flex={1} bgColor={"gray"}>
             <Box
@@ -31,8 +44,9 @@ export const History = ({ navigation }: HistoryProps) => {
             </Box>
 
 
-            <Box alignItems={'center'} justifyContent={'center'} w="full">
+            <Box alignItems={'center'} justifyContent={'center'} w="full" h="full" >
                 <Input
+                    width={'full'}
                     InputRightElement={<Icon
                         as={AntDesign}
                         name="search1"
@@ -41,8 +55,29 @@ export const History = ({ navigation }: HistoryProps) => {
                     />}
                 />
                 <FlatList
-                    data={[1, 2, 3, 4, 5, 6, 7]}
-                    renderItem={({ item }) => <Button>Hello</Button>}
+                    width={'4/5'}
+                    data={loads}
+                    renderItem={({ item, index }) =>
+                        <Button key={index} width={"full"} height={'200px'}>
+                            <Box flex={1} flexDir='row' justifyContent={'space-between'} borderWidth={1}>
+                                <Box>
+                                    {item.client}
+                                </Box>
+                                <Box>
+                                    {item.plate}
+                                </Box>
+                            </Box>
+                            <Box flex={1} flexDir='row' justifyContent={'space-between'}>
+                                <Box>
+                                    data
+                                </Box>
+                                <Box>
+                                    {item.material} - {item.quantity}
+                                </Box>
+                            </Box>
+                        </Button>
+                    }
+
                     keyExtractor={(item) => item.toString()}
                 />
             </Box>
