@@ -1,4 +1,4 @@
-package com.jazida;
+package com.gelinger.jazida;
 
 import android.os.Build;
 import android.os.Bundle;

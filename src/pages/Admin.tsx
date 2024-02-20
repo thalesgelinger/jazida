@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { Box, Spinner, useToast } from 'native-base'
-import { ActivityIndicator, Image } from 'react-native'
+import {  Image } from 'react-native'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
 import { RootStackParams } from '../router'

@@ -1,13 +1,13 @@
 
+import React, { useEffect, useState } from 'react'
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Box } from 'native-base'
-import React, { useEffect, useState } from 'react'
-import { isImportTypeNode } from 'typescript';
-import { listenStorageKeys, sendMissingByKey } from '../services/loads';
+import { LoadType } from '../pages/NewLoad';
+import { listenNotLoaded, saveLoad } from '../services/loads';
 
 export const NotSendedLoads = () => {
-    const [notSendedLoads, setNotSendedLoads] = useState<string[]>([]);
     const { isInternetReachable } = useNetInfo()
+    const [notSendedLoads, setNotSendedLoads] = useState<LoadType[]>([]);
 
     useEffect(() => {
         if (isInternetReachable) {
@@ -16,21 +16,20 @@ export const NotSendedLoads = () => {
     }, [isInternetReachable])
 
     useEffect(() => {
-        listenStorageKeys(loads => {
+        listenNotLoaded(loads => {
+            console.log({ loads: JSON.stringify(loads, null, 2) })
             setNotSendedLoads(loads)
         })
     }, [])
 
-    const sendMissingLoads = async (loadsKeys = notSendedLoads) => {
+    const sendMissingLoads = async () => {
         try {
-            console.log({ loadsKeys })
-            const key = loadsKeys.pop();
-            console.log({ key })
-            await sendMissingByKey(key);
-            console.log({ loadsKeys })
-            setNotSendedLoads(loadsKeys)
-            if (loadsKeys.length > 0) {
-                sendMissingLoads(loadsKeys)
+            const load = notSendedLoads.pop();
+            await saveLoad(load);
+            await deleteFromLocalDB()
+            setNotSendedLoads(notSendedLoads)
+            if (notSendedLoads.length > 0) {
+                sendMissingLoads()
             }
         } catch {
             return;
