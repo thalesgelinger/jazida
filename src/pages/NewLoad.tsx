@@ -35,6 +35,10 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
 
     const canConfirm = !!client && !!plate && !!material && !!quantity && !!paymentMethod && !!signature;
 
+    useEffect(() => {
+        cleanStates()
+    }, [])
+
     const handleConfirm = () => {
         const load = {
             client,
@@ -44,7 +48,6 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             paymentMethod,
             signature
         }
-        cleanStates()
         navigation.push("Review", { load })
     }
 

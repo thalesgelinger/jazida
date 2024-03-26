@@ -1,5 +1,5 @@
 import axios from 'axios'
 
 export const api = axios.create({
-    baseURL: 'https://us-central1-jazida-dev.cloudfunctions.net'
+    baseURL: 'http://10.0.2.2:8080/api'
 })
