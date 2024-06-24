@@ -5,9 +5,13 @@ import { AntDesign } from '@expo/vector-icons';
 import { Button } from '../components/Button';
 import { saveLoad } from '../services/loads';
 import { Unconnected } from '../components/Unconnected';
-import { NotSendedLoads } from '../components/NotSendedLoads';
+import { NotSentLoads } from '../components/NotSentLoads';
 import { useState } from 'react';
 import { FullLoader } from '../components/FullLoader';
+import { useSQLiteContext } from 'expo-sqlite';
+import { drizzle } from 'drizzle-orm/expo-sqlite';
+import * as loadSchema from '../database/schema';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 
 type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
@@ -17,16 +21,41 @@ export const Review = ({ route, navigation }: ReviewProps) => {
 
     const [loading, setLoading] = useState(false)
 
+    const database = useSQLiteContext()
+    const db = drizzle(database, { schema: loadSchema })
+
+    const netInfo = useNetInfo()
+
+
     const send = async () => {
         setLoading(true)
-        await saveLoad(load)
-        setLoading(false)
-        navigation.goBack()
+        const hasInternet = netInfo.isWifiEnabled && netInfo.isInternetReachable
+        try {
+            if (!hasInternet) {
+                await saveLoad(load)
+            } else {
+                await db.insert(loadSchema.load).values({
+                    id: Date.now().toString(),
+                    plate: load.plate,
+                    client: load.client,
+                    material: load.material,
+                    quantity: load.quantity,
+                    paymentMethod: load.paymentMethod,
+                    signaturePath: load.signature.uri
+                })
+            }
+
+        } catch (e) {
+            console.log(e.response.data)
+        } finally {
+            setLoading(false)
+            navigation.goBack()
+        }
     }
 
     return (
         <Box h="full" bgColor={"gray"}>
-        { loading && <FullLoader />}
+            {loading && <FullLoader />}
             <Box
                 backgroundColor={"yellow"}
                 height={"80px"}
@@ -47,7 +76,7 @@ export const Review = ({ route, navigation }: ReviewProps) => {
                 <Heading>Revisar</Heading>
             </Box>
             <Unconnected />
-            <NotSendedLoads />
+            <NotSentLoads />
             <Flex alignItems={"center"} h="full" flex={1}>
 
                 <Box

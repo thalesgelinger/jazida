@@ -12,13 +12,13 @@ type SignInProps = NativeStackScreenProps<RootStackParams, "SignIn">
 export const SignIn = ({ navigation }: SignInProps) => {
 
     useEffect(() => {
-        const logType = getLoginType();
-
-        if (!!logType) {
-            navigation.navigate('NewLoad', {
-                admin: logType === 'admin'
-            })
-        }
+        getLoginType().then(loginType => {
+            if (!!loginType) {
+                navigation.navigate('NewLoad', {
+                    admin: loginType === 'admin'
+                })
+            }
+        });
 
     }, [])
 

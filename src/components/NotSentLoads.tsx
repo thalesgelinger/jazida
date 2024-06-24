@@ -3,9 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useNetInfo } from '@react-native-community/netinfo';
 import { Box } from 'native-base'
 import { LoadType } from '../pages/NewLoad';
-import { listenNotLoaded, saveLoad } from '../services/loads';
 
-export const NotSendedLoads = () => {
+export const NotSentLoads = () => {
     const { isInternetReachable } = useNetInfo()
     const [notSendedLoads, setNotSendedLoads] = useState<LoadType[]>([]);
 
@@ -15,27 +14,8 @@ export const NotSendedLoads = () => {
         }
     }, [isInternetReachable])
 
-    useEffect(() => {
-        listenNotLoaded(loads => {
-            console.log({ loads: JSON.stringify(loads, null, 2) })
-            setNotSendedLoads(loads)
-        })
-    }, [])
 
-    const sendMissingLoads = async () => {
-        try {
-            const load = notSendedLoads.pop();
-            await saveLoad(load);
-            await deleteFromLocalDB()
-            setNotSendedLoads(notSendedLoads)
-            if (notSendedLoads.length > 0) {
-                sendMissingLoads()
-            }
-        } catch {
-            return;
-        }
-    }
-
+    const sendMissingLoads = async () => { }
 
     return (
         <>
@@ -53,7 +33,8 @@ export const NotSendedLoads = () => {
                             <Box _text={{ textAlign: 'center' }}>{`Restam: ${notSendedLoads.length}`}</Box>
                         </>
                     }
-                </Box>}
+                </Box>
+            }
         </>
     )
 }

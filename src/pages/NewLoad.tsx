@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Box, Flex, Heading, Icon, Pressable, ScrollView, Text, } from "native-base"
+import { useState } from "react"
+import { Box, Heading, Icon, Pressable, ScrollView, Text, } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
 import { Option } from "../components/Option"
@@ -10,8 +10,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import { RootStackParams } from "../router"
 import { AntDesign } from '@expo/vector-icons';
 import { Unconnected } from "../components/Unconnected"
-import { getLoadsNotSended } from "../services/loads"
-import { NotSendedLoads } from "../components/NotSendedLoads"
+import { NotSentLoads } from "../components/NotSentLoads"
 import { deleteLoginType } from "../services/admin"
 
 type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
@@ -35,10 +34,6 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
 
     const canConfirm = !!client && !!plate && !!material && !!quantity && !!paymentMethod && !!signature;
 
-    useEffect(() => {
-        cleanStates()
-    }, [])
-
     const handleConfirm = () => {
         const load = {
             client,
@@ -49,6 +44,7 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             signature
         }
         navigation.push("Review", { load })
+        cleanStates()
     }
 
     const cleanStates = () => {
@@ -102,7 +98,7 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             </Box>
 
             <Unconnected />
-            <NotSendedLoads />
+            <NotSentLoads />
 
 
             <ScrollView
