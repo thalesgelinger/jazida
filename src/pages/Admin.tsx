@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { Box, Spinner, useToast } from 'native-base'
-import {  Image } from 'react-native'
+import { Box, useToast } from 'native-base'
+import { Image } from 'react-native'
 import { Button } from '../components/Button'
 import { Input } from '../components/Input'
 import { RootStackParams } from '../router'
 import truck from '../assets/truck.png'
 
-import { adminSignIn, setLoginType } from '../services/admin'
 import { FullLoader } from '../components/FullLoader'
 
 type AdminProps = NativeStackScreenProps<RootStackParams, "Admin">
@@ -22,9 +21,25 @@ export const Admin = ({ navigation }: AdminProps) => {
 
     const signIn = async () => {
         try {
-            setLoading(true)
-            await adminSignIn(name, password);
-            setLoginType('admin')
+            console.log({ process })
+
+            const isNameValid = process.env.EXPO_PUBLIC_NAME == name
+
+            if (!isNameValid) {
+                toast.show({
+                    description: "Nome inválido"
+                })
+                return
+            }
+
+            const isPasswordValid = process.env.EXPO_PUBLIC_PASSWORD == password
+            if (!isPasswordValid) {
+                toast.show({
+                    description: "Senha inválido"
+                })
+                return
+            }
+
             navigation.pop()
             navigation.navigate('NewLoad', {
                 admin: true

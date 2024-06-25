@@ -3,7 +3,6 @@ import { Box, FlatList, Heading, Icon, Pressable } from 'native-base'
 import { RootStackParams } from '../router';
 import { AntDesign } from '@expo/vector-icons';
 import { Input } from '../components/Input';
-import { Button as NativeButton } from "native-base"
 import { Button } from '../components/Button';
 import { useEffect, useState } from 'react';
 import { getLoads } from '../services/loads';
@@ -12,13 +11,10 @@ import { LoadType } from './NewLoad';
 type HistoryProps = NativeStackScreenProps<RootStackParams, 'History'>;
 
 export const History = ({ navigation }: HistoryProps) => {
-    const [loads, setLoads] = useState<LoadType[]>([])
+    const [loads, setLoads] = useState<(LoadType & { id: string })[]>([])
 
     useEffect(() => {
-        getLoads().then(loads => {
-            console.log({ loads })
-            setLoads(loads)
-        });
+        getLoads().then(setLoads);
     }, [])
 
     return (
@@ -55,11 +51,14 @@ export const History = ({ navigation }: HistoryProps) => {
                     />}
                 />
                 <FlatList
-                    width={'4/5'}
+                    width="full"
                     data={loads}
+                    _contentContainerStyle={{
+                        alignItems: "center"
+                    }}
                     renderItem={({ item, index }) =>
-                        <Button key={index} width={"full"} height={'200px'}>
-                            <Box flex={1} flexDir='row' justifyContent={'space-between'} borderWidth={1}>
+                        <Button key={index} width={"full"} height={'100px'} >
+                            <Box flex={1} w="full" flexDir='row' justifyContent={'space-between'} >
                                 <Box>
                                     {item.client}
                                 </Box>
@@ -71,14 +70,17 @@ export const History = ({ navigation }: HistoryProps) => {
                                 <Box>
                                     data
                                 </Box>
-                                <Box>
+                                <Box flexDir='row'>
                                     {item.material} - {item.quantity}
                                 </Box>
                             </Box>
                         </Button>
                     }
 
-                    keyExtractor={(item) => item.toString()}
+                    ListFooterComponent={() => {
+                        return <Box h={100} />
+                    }}
+                    keyExtractor={(item) => item.id}
                 />
             </Box>
 

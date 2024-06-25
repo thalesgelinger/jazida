@@ -11,7 +11,6 @@ import { RootStackParams } from "../router"
 import { AntDesign } from '@expo/vector-icons';
 import { Unconnected } from "../components/Unconnected"
 import { NotSentLoads } from "../components/NotSentLoads"
-import { deleteLoginType } from "../services/admin"
 
 type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
 
