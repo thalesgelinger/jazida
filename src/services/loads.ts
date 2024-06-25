@@ -9,7 +9,10 @@ export const getLoads = async () => {
 export const saveLoad = async (load: LoadType) => {
     const { data: { url, key } } = await api.post<{ url: string, key: string }>("/signature")
 
-    const { data: blob } = await api.get(load.signature.uri, {
+
+    const signaturePath = load.hasOwnProperty("signaturePath") ? load.signaturePath : load.signature.uri
+
+    const { data: blob } = await api.get(signaturePath, {
         responseType: 'blob',
     });
 
