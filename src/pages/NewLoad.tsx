@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, Heading, Icon, Pressable, ScrollView, Text, } from "native-base"
+import { Box, Heading, Icon, Pressable, ScrollView, Text } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
 import { Option } from "../components/Option"
@@ -11,33 +11,42 @@ import { RootStackParams } from "../router"
 import { AntDesign } from '@expo/vector-icons';
 import { Unconnected } from "../components/Unconnected"
 import { NotSentLoads } from "../components/NotSentLoads"
+import { useResources } from "./useResorces"
 
 type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
 
 export type LoadType = {
-    client: string,
-    plate: string,
-    material: string,
+    clientId: number,
+    plateId: number,
+    materialId: number,
     quantity: string,
-    paymentMethod: string,
+    paymentMethod: PaymentMethod,
     signature: FileSystem.FileInfo
 }
 
+export type PaymentMethod = "CASH" | "INSTALLMENT"
+
 export const NewLoad = ({ navigation, route }: NewLoadProps) => {
-    const [client, setClient] = useState('')
-    const [plate, setPlate] = useState('')
-    const [material, setMaterial] = useState('')
+    const [clientId, setClientId] = useState<number>()
+    const [plateId, setPlateId] = useState<number>()
+    const [materialId, setMaterialId] = useState<number>()
     const [quantity, setQuantity] = useState('')
-    const [paymentMethod, setPaymentMethod] = useState('')
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('CASH')
     const [signature, setSignature] = useState<FileSystem.FileInfo | null>()
 
-    const canConfirm = !!client && !!plate && !!material && !!quantity && !!paymentMethod && !!signature;
+    const canConfirm = !!clientId && !!plateId && !!materialId && !!quantity && !!paymentMethod && !!signature;
+
+    const { clients, materials } = useResources()
+
+    const clientsOptions = clients.map(c => ({ id: c.id, value: c.name }))
+    const platesOptions = clients.find(c => c.id === clientId)?.plates.map(p => ({ id: p.id, value: p.plate })) ?? []
+    const materialOptions = materials.map(m => ({ id: m.id, value: m.name }))
 
     const handleConfirm = () => {
         const load = {
-            client,
-            plate,
-            material,
+            clientId,
+            plateId,
+            materialId,
             quantity,
             paymentMethod,
             signature
@@ -47,9 +56,9 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
     }
 
     const cleanStates = () => {
-        setClient('')
-        setPlate('')
-        setMaterial('')
+        setClientId(-1)
+        setPlateId(-1)
+        setMaterialId(-1)
         setQuantity('')
         setSignature(null)
     }
@@ -59,7 +68,6 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
     }
 
     const handleGoOut = () => {
-        deleteLoginType()
         navigation.goBack()
     }
 
@@ -108,9 +116,18 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
                     justifyContent: "space-between",
                 }}
             >
-                <SelectionButton title="Selecione o Cliente" onSelect={setClient} />
-                <SelectionButton title="Selecione a Placa" onSelect={setPlate} />
-                <SelectionButton title="Selecione o Material" onSelect={setMaterial} />
+                <SelectionButton
+                    title="Selecione o Cliente"
+                    onSelect={setClientId}
+                    options={clientsOptions} />
+                <SelectionButton
+                    title="Selecione a Placa"
+                    onSelect={setPlateId}
+                    options={platesOptions} />
+                <SelectionButton
+                    title="Selecione o Material"
+                    onSelect={setMaterialId}
+                    options={materialOptions} />
                 <Input
                     placeholder={"Digite a quantidade"}
                     keyboardType="numeric"

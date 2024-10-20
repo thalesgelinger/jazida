@@ -1,17 +1,18 @@
 import { Box, Button } from "native-base";
 import { useEffect, useState } from "react";
+import { PaymentMethod } from "../pages/NewLoad";
 
 type OptionProps = {
-    onOption: (option: string) => void
+    onOption: (option: PaymentMethod) => void
 }
 export const Option = ({ onOption }: OptionProps) => {
-    const [selected, setSelected] = useState<'cash' | 'term'>('cash')
+    const [selected, setSelected] = useState<PaymentMethod>('CASH')
 
     useEffect(() => {
         onOption(selected)
     }, [])
 
-    const toggle = (selected: 'cash' | 'term') => () => {
+    const toggle = (selected: PaymentMethod) => () => {
         setSelected(selected)
         onOption(selected)
     }
@@ -43,21 +44,21 @@ export const Option = ({ onOption }: OptionProps) => {
             >
                 <Button
                     flex={1}
-                    bgColor={selected === 'cash' ? "yellow" : 'white'}
+                    bgColor={selected === 'CASH' ? "yellow" : 'white'}
                     _text={{
                         color: 'black'
                     }}
-                    onPress={toggle('cash')}
+                    onPress={toggle('CASH')}
                 >
                     Á vista
                 </Button>
                 <Button
                     flex={1}
-                    bgColor={selected === 'term' ? "yellow" : 'white'}
+                    bgColor={selected === 'INSTALLMENT' ? "yellow" : 'white'}
                     _text={{
                         color: 'black'
                     }}
-                    onPress={toggle('term')}
+                    onPress={toggle('INSTALLMENT')}
                 >
                     Á prazo
                 </Button>

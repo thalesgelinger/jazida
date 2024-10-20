@@ -6,28 +6,23 @@ import { useReducer, useState } from 'react';
 
 type SelectorProps = {
     title: string;
-    onSelect: (option: any) => void
+    onSelect: (idx: number) => void
+    options: { id: number, value: string }[]
 }
-export const SelectionButton = ({ title, onSelect }: SelectorProps) => {
+export const SelectionButton = ({ title, onSelect, options }: SelectorProps) => {
     const [show, toggle] = useReducer(s => !s, false)
     const [selected, setSelected] = useState<string>()
-    const [options, setOptions] = useState([
-        "João",
-        "Cleber",
-        "Taisson",
-        "Epaminondas",
-        "Junior",
-    ])
+
     const [filter, setFilter] = useState('');
 
     const filteredOptions = options.filter(option => {
-        return option.toLowerCase().includes(filter.toLowerCase())
+        return option.value.toLowerCase().includes(filter.toLowerCase())
     })
 
     const handleSelectedOption = (item: typeof options[0]) => () => {
         toggle();
-        setSelected(item)
-        onSelect(item)
+        setSelected(item.value)
+        onSelect(item.id)
     }
 
     return (
@@ -85,7 +80,7 @@ export const SelectionButton = ({ title, onSelect }: SelectorProps) => {
                                         minW={"270px"}
                                         onPress={handleSelectedOption(item)}
                                     >
-                                        {item}
+                                        {item.value}
                                     </Button>
                                 }
                                 keyExtractor={(item) => item.toString()}

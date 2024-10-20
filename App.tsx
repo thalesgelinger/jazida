@@ -9,7 +9,7 @@ import { openDatabaseSync, SQLiteProvider } from 'expo-sqlite/next';
 import { ActivityIndicator, Text, View } from "react-native";
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
-
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const DATABSE_NAME = 'sqlite.db'
 
@@ -19,6 +19,8 @@ const db = drizzle(expo);
 type ThemeArgs = Parameters<typeof extendTheme>
 
 export type ThemeProps = ThemeArgs[0] & ThemeArgs[1]
+
+const queryClient = new QueryClient()
 
 export default function App() {
     useDrizzleStudio(expo);
@@ -45,7 +47,9 @@ export default function App() {
         <SQLiteProvider databaseName={DATABSE_NAME}>
             <NativeBaseProvider theme={theme}>
                 <NavigationContainer>
-                    <Router />
+                    <QueryClientProvider client={queryClient}>
+                        <Router />
+                    </QueryClientProvider>
                 </NavigationContainer>
             </NativeBaseProvider>
         </SQLiteProvider>

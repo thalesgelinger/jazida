@@ -1,10 +1,10 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
 
 export const load = sqliteTable("loads", {
     id: text("id").primaryKey(),
-    client: text("client").notNull(),
-    plate: text("plate").notNull(),
-    material: text("material").notNull(),
+    clientId: integer("client_id").notNull(),
+    plateId: integer("plate_id").notNull(),
+    materialId: integer("material_id").notNull(),
     quantity: text("quantity").notNull(),
     paymentMethod: text("payment_method").notNull(),
     signaturePath: text("signature_path").notNull()

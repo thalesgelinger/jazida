@@ -19,10 +19,7 @@ export const NotSentLoads = () => {
     const toast = useToast()
 
     useEffect(() => {
-        const hasInternet = netInfo.isInternetReachable && netInfo.isConnected
-        if (hasInternet) {
-            sendMissingLoads()
-        }
+        sendMissingLoads()
     }, [netInfo.isInternetReachable, netInfo.isConnected])
 
     useEffect(() => {
@@ -36,6 +33,9 @@ export const NotSentLoads = () => {
 
 
     const sendMissingLoads = async () => {
+        const hasInternet = netInfo.isInternetReachable && netInfo.isConnected
+        if (!hasInternet) return
+
         notSentLoads.forEach(async (load) => {
             try {
                 await saveLoad(load as LoadType)

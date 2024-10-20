@@ -12,6 +12,7 @@ import { useSQLiteContext } from 'expo-sqlite';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import * as loadSchema from '../database/schema';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { useResources } from './useResorces';
 
 
 type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
@@ -27,18 +28,25 @@ export const Review = ({ route, navigation }: ReviewProps) => {
     const netInfo = useNetInfo()
 
 
+    const { clients, materials } = useResources()
+
+    const client = clients.find(c => c.id === load.clientId).name
+    const plate = clients.find(c => c.id === load.clientId).plates.find(p => p.id === load.plateId).plate
+    const material = materials.find(m => m.id === load.materialId).name
+
     const send = async () => {
         setLoading(true)
         const hasInternet = netInfo.isWifiEnabled && netInfo.isInternetReachable
+        console.log({ hasInternet })
         try {
-            if (!hasInternet) {
+            if (hasInternet) {
                 await saveLoad(load)
             } else {
                 await db.insert(loadSchema.load).values({
                     id: Date.now().toString(),
-                    plate: load.plate,
-                    client: load.client,
-                    material: load.material,
+                    plateId: load.plateId,
+                    clientId: load.clientId,
+                    materialId: load.materialId,
                     quantity: load.quantity,
                     paymentMethod: load.paymentMethod,
                     signaturePath: load.signature.uri
@@ -101,17 +109,17 @@ export const Review = ({ route, navigation }: ReviewProps) => {
                         <Text>
                             Cliente: {"\n"}
                         </Text>
-                        <Heading textAlign={'center'}> {load.client} </Heading>
+                        <Heading textAlign={'center'}> {client} </Heading>
 
                         <Text>
                             Placa: {"\n"}
                         </Text>
-                        <Heading textAlign={'center'}> {load.plate} </Heading>
+                        <Heading textAlign={'center'}> {plate} </Heading>
 
                         <Text>
                             Material: {"\n"}
                         </Text>
-                        <Heading textAlign={'center'}> {load.material} </Heading>
+                        <Heading textAlign={'center'}> {material} </Heading>
                         <Text>
                             Quantidade: {"\n"}
                         </Text>

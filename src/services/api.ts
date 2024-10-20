@@ -1,5 +1,5 @@
 import axios from 'axios'
 
 export const api = axios.create({
-    baseURL: 'https://8plz981cfe.execute-api.sa-east-1.amazonaws.com/prod'
+    baseURL: 'http://10.0.2.2:8080/api'
 })
