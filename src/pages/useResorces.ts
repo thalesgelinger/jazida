@@ -2,12 +2,15 @@ import { useQuery } from "@tanstack/react-query"
 import { api } from "../services/api"
 
 export const useResources = () => {
+
+    console.log({ end: process.env })
+
     const { data: clients = [] } = useQuery({
         queryKey: ["clients"],
         queryFn: async () => {
             const response = await api.get<{ id: number, name: string, plates: { id: number, plate: string }[] }[]>("/clients", {
                 headers: {
-                    Authorization: "loader"
+                    Authorization: process.env.EXPO_PUBLIC_LOADER_PASS
                 }
             })
 
@@ -20,7 +23,7 @@ export const useResources = () => {
         queryFn: async () => {
             const response = await api.get<{ id: number, name: string }[]>("/materials", {
                 headers: {
-                    Authorization: "loader"
+                    Authorization: process.env.EXPO_PUBLIC_LOADER_PASS
                 }
             })
 

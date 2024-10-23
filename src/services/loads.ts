@@ -4,7 +4,7 @@ import { api } from "./api"
 export const getLoads = async () => {
     const response = await api.get<(LoadType & { id: string })[]>('/loads', {
         headers: {
-            Authorization: "admin"
+            Authorization: process.env.EXPO_PUBLIC_ADMIN_PASSXPO_PUBLIC_LOADER_PASS,
         }
     })
     return response.data
@@ -23,9 +23,7 @@ interface BlobType {
 }
 
 export const saveLoad = async (load: LoadType) => {
-    console.log("LOAD: ", { load})
     try {
-        console.log("Load: ", { load })
         const { data: blob } = await api.get<BlobType>(load.signature.uri, { responseType: "blob" })
         const form = new FormData();
         const imageData = {
@@ -36,14 +34,14 @@ export const saveLoad = async (load: LoadType) => {
         form.append("image", imageData)
         const { data: { url } } = await api.post("/signature", form, {
             headers: {
-                Authorization: "loader",
+                Authorization: process.env.EXPO_PUBLIC_LOADER_PASS,
                 'Content-Type': 'multipart/form-data',
             },
             timeout: 3000
         })
         await api.post('/load', { ...load, signature: url }, {
             headers: {
-                Authorization: "loader"
+                Authorization: process.env.EXPO_PUBLIC_LOADER_PASS
             }
         });
         console.log("Load saved")

@@ -42,6 +42,7 @@ export const Review = ({ route, navigation }: ReviewProps) => {
             if (hasInternet) {
                 await saveLoad(load)
             } else {
+                console.log("storing on device")
                 await db.insert(loadSchema.load).values({
                     id: Date.now().toString(),
                     plateId: load.plateId,

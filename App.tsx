@@ -8,7 +8,6 @@ import migrations from './drizzle/migrations';
 import { openDatabaseSync, SQLiteProvider } from 'expo-sqlite/next';
 import { ActivityIndicator, Text, View } from "react-native";
 import { drizzle } from 'drizzle-orm/expo-sqlite';
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const DATABSE_NAME = 'sqlite.db'
@@ -23,7 +22,7 @@ export type ThemeProps = ThemeArgs[0] & ThemeArgs[1]
 const queryClient = new QueryClient()
 
 export default function App() {
-    useDrizzleStudio(expo);
+    //useDrizzleStudio(expo);
     const theme = extendTheme(themes)
     const { success, error } = useMigrations(db, migrations);
 

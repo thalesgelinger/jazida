@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "bfb4b990-f437-4370-b515-f86d9d8cfa47",
+  "id": "1fd50169-646a-496a-b98c-d5e878885fd2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "loads": {
@@ -14,23 +14,23 @@
           "notNull": true,
           "autoincrement": false
         },
-        "client": {
-          "name": "client",
-          "type": "text",
+        "client_id": {
+          "name": "client_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "plate": {
-          "name": "plate",
-          "type": "text",
+        "plate_id": {
+          "name": "plate_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "material": {
-          "name": "material",
-          "type": "text",
+        "material_id": {
+          "name": "material_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
