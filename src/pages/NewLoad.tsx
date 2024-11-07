@@ -63,6 +63,7 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
         setSignature(null)
     }
 
+
     const goToLoadings = () => {
         navigation.navigate("History")
     }

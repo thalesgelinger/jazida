@@ -22,7 +22,6 @@ export type ThemeProps = ThemeArgs[0] & ThemeArgs[1]
 const queryClient = new QueryClient()
 
 export default function App() {
-    //useDrizzleStudio(expo);
     const theme = extendTheme(themes)
     const { success, error } = useMigrations(db, migrations);
 

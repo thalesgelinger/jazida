@@ -1,6 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
-import { useNetInfo } from '@react-native-community/netinfo';
+import React, { useEffect } from 'react'
 import { Box, useToast } from 'native-base'
 import { LoadType } from '../pages/NewLoad';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
@@ -8,38 +7,42 @@ import { useSQLiteContext } from 'expo-sqlite';
 import * as loadSchema from '../database/schema';
 import { saveLoad } from '../services/loads';
 import { eq } from 'drizzle-orm';
+import { useInternet } from '../hooks/use-internet';
+import { useNotSentLoads } from '../hooks/use-not-sent-loads';
+
+type FileInfo = FileSystem.FileInfo
 
 export const NotSentLoads = () => {
-    const netInfo = useNetInfo()
-    const [notSentLoads, setNotSentLoads] = useState<(LoadType & { id: string })[]>([]);
+    const hasInternet = useInternet()
 
     const database = useSQLiteContext()
     const db = drizzle(database, { schema: loadSchema })
 
     const toast = useToast()
 
+    const { notSentLoads, fetchLocalNotSent } = useNotSentLoads()
+
     useEffect(() => {
         sendMissingLoads()
-    }, [netInfo.isInternetReachable, netInfo.isConnected])
+    }, [hasInternet])
 
     useEffect(() => {
-        fetchNotSent()
+        fetchLocalNotSent()
     }, [])
 
-    const fetchNotSent = async () => {
-        const result = await db.query.load.findMany<LoadType[]>()
-        setNotSentLoads(result)
-    }
-
-
     const sendMissingLoads = async () => {
-        const hasInternet = netInfo.isInternetReachable && netInfo.isConnected
         if (!hasInternet) return
 
-        notSentLoads.forEach(async (load) => {
+        for await (let load of notSentLoads) {
             try {
-                await saveLoad(load as LoadType)
+                await saveLoad({
+                    ...load,
+                    signature: {
+                        uri: load.signaturePath,
+                    } as FileInfo
+                })
                 await db.delete(loadSchema.load).where(eq(loadSchema.load.id, load.id));
+                fetchLocalNotSent()
             } catch (e) {
                 toast.show({
                     title: "Erro Carregamento",
@@ -48,23 +51,22 @@ export const NotSentLoads = () => {
 
                 console.error(e)
             }
-        })
+        }
     }
 
     return (
         <>
             {notSentLoads.length > 0 &&
                 <Box backgroundColor={"yellow"} borderTopWidth={1} borderBottomWidth={1}>
-                    {!netInfo.isInternetReachable ?
-                        <>
-                            <Box _text={{ textAlign: 'center' }}>{`Carregamentos não enviados: ${notSentLoads.length}`}</Box>
-                            <Box _text={{ textAlign: 'center' }}>Conecte-se a internet para enviar</Box>
-                        </>
-                        :
-
+                    {hasInternet ?
                         <>
                             <Box _text={{ textAlign: 'center' }}>Enviando restantes...</Box>
                             <Box _text={{ textAlign: 'center' }}>{`Restam: ${notSentLoads.length}`}</Box>
+                        </>
+                        :
+                        <>
+                            <Box _text={{ textAlign: 'center' }}>{`Carregamentos não enviados: ${notSentLoads.length}`}</Box>
+                            <Box _text={{ textAlign: 'center' }}>Conecte-se a internet para enviar</Box>
                         </>
                     }
                 </Box>

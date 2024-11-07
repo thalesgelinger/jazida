@@ -1,13 +1,12 @@
-import { useNetInfo } from "@react-native-community/netinfo";
 import { Box } from "native-base";
-
+import { useInternet } from "../hooks/use-internet";
 
 export const Unconnected = () => {
 
-    const { isInternetReachable } = useNetInfo();
+    const hasInternet = useInternet()
     return (
         <>
-            {!isInternetReachable && <Box
+            {!hasInternet && <Box
                 backgroundColor={'red.500'}
                 _text={{ textAlign: 'center', color: 'white' }}>
                 Desconectado

@@ -11,8 +11,9 @@ import { FullLoader } from '../components/FullLoader';
 import { useSQLiteContext } from 'expo-sqlite';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import * as loadSchema from '../database/schema';
-import { useNetInfo } from '@react-native-community/netinfo';
 import { useResources } from './useResorces';
+import { useInternet } from '../hooks/use-internet';
+import { useNotSentLoads } from '../hooks/use-not-sent-loads';
 
 
 type ReviewProps = NativeStackScreenProps<RootStackParams, 'Review'>;
@@ -25,25 +26,23 @@ export const Review = ({ route, navigation }: ReviewProps) => {
     const database = useSQLiteContext()
     const db = drizzle(database, { schema: loadSchema })
 
-    const netInfo = useNetInfo()
-
-
     const { clients, materials } = useResources()
 
     const client = clients.find(c => c.id === load.clientId).name
     const plate = clients.find(c => c.id === load.clientId).plates.find(p => p.id === load.plateId).plate
     const material = materials.find(m => m.id === load.materialId).name
 
+    const hasInternet = useInternet()
+
+    const { fetchLocalNotSent } = useNotSentLoads()
+
     const send = async () => {
         setLoading(true)
-        const hasInternet = netInfo.isWifiEnabled && netInfo.isInternetReachable
-        console.log({ hasInternet })
         try {
             if (hasInternet) {
                 await saveLoad(load)
             } else {
-                console.log("storing on device")
-                await db.insert(loadSchema.load).values({
+                const newLoad = {
                     id: Date.now().toString(),
                     plateId: load.plateId,
                     clientId: load.clientId,
@@ -51,7 +50,10 @@ export const Review = ({ route, navigation }: ReviewProps) => {
                     quantity: load.quantity,
                     paymentMethod: load.paymentMethod,
                     signaturePath: load.signature.uri
-                })
+                }
+                console.log("storing on device", newLoad)
+                await db.insert(loadSchema.load).values(newLoad)
+                fetchLocalNotSent()
             }
 
         } catch (e) {

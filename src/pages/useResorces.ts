@@ -3,8 +3,6 @@ import { api } from "../services/api"
 
 export const useResources = () => {
 
-    console.log({ end: process.env })
-
     const { data: clients = [] } = useQuery({
         queryKey: ["clients"],
         queryFn: async () => {
