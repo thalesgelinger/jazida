@@ -27,9 +27,6 @@ export default function App() {
 
 
     if (error) {
-
-        console.log({ ...error })
-
         return <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
             <Text>
                 Error carregando base de dados

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Box, Heading, Icon, Pressable, ScrollView, Text } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
@@ -51,8 +51,8 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             paymentMethod,
             signature
         }
-        navigation.push("Review", { load })
         cleanStates()
+        navigation.push("Review", { load })
     }
 
     const cleanStates = () => {
@@ -119,22 +119,26 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             >
                 <SelectionButton
                     title="Selecione o Cliente"
+                    value={clients.find(c => c.id === clientId)?.name}
                     onSelect={setClientId}
                     options={clientsOptions} />
                 <SelectionButton
                     title="Selecione a Placa"
+                    value={clients.find(c => c.id === clientId)?.plates.find(p => p.id === plateId)?.plate}
                     onSelect={setPlateId}
                     options={platesOptions} />
                 <SelectionButton
                     title="Selecione o Material"
+                    value={materialOptions.find(m => m.id === materialId)?.value}
                     onSelect={setMaterialId}
                     options={materialOptions} />
                 <Input
                     placeholder={"Digite a quantidade"}
                     keyboardType="numeric"
+                    value={quantity}
                     onChangeText={setQuantity} />
                 <Option onOption={setPaymentMethod} />
-                <Signature onFileSave={setSignature} />
+                <Signature onFileSave={setSignature} signature={signature} />
 
 
             </ScrollView>

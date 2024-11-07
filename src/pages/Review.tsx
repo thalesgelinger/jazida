@@ -51,7 +51,6 @@ export const Review = ({ route, navigation }: ReviewProps) => {
                     paymentMethod: load.paymentMethod,
                     signaturePath: load.signature.uri
                 }
-                console.log("storing on device", newLoad)
                 await db.insert(loadSchema.load).values(newLoad)
                 fetchLocalNotSent()
             }

@@ -23,7 +23,6 @@ interface BlobType {
 }
 
 export const saveLoad = async (load: LoadType) => {
-    console.log("Sending load", JSON.stringify(load, null, 2))
     const { data: blob } = await api.get<BlobType>(load.signature.uri, { responseType: "blob" })
     const form = new FormData();
     const imageData = {
@@ -44,5 +43,4 @@ export const saveLoad = async (load: LoadType) => {
             Authorization: process.env.EXPO_PUBLIC_LOADER_PASS
         }
     });
-    console.log("Load saved")
 }

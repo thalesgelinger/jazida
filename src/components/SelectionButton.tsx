@@ -6,12 +6,12 @@ import { useReducer, useState } from 'react';
 
 type SelectorProps = {
     title: string;
+    value: string | undefined;
     onSelect: (idx: number) => void
     options: { id: number, value: string }[]
 }
-export const SelectionButton = ({ title, onSelect, options }: SelectorProps) => {
+export const SelectionButton = ({ title, value, onSelect, options }: SelectorProps) => {
     const [show, toggle] = useReducer(s => !s, false)
-    const [selected, setSelected] = useState<string>()
 
     const [filter, setFilter] = useState('');
 
@@ -21,7 +21,6 @@ export const SelectionButton = ({ title, onSelect, options }: SelectorProps) => 
 
     const handleSelectedOption = (item: typeof options[0]) => () => {
         toggle();
-        setSelected(item.value)
         onSelect(item.id)
     }
 
@@ -29,14 +28,14 @@ export const SelectionButton = ({ title, onSelect, options }: SelectorProps) => 
         <>
             <Button
                 onPress={toggle}
-                endIcon={!selected && <Icon
+                endIcon={!value && <Icon
                     as={AntDesign}
                     name="right"
                     size="sm"
                     color={"black"}
                 />}
             >
-                {selected ?? title}
+                {value ?? title}
             </Button>
             <Modal
                 isOpen={show}

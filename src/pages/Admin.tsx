@@ -21,7 +21,6 @@ export const Admin = ({ navigation }: AdminProps) => {
 
     const signIn = async () => {
         try {
-            console.log({ process })
 
             const isNameValid = process.env.EXPO_PUBLIC_NAME == name
 

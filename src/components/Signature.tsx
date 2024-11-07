@@ -1,26 +1,25 @@
 import { Box, Icon, Image, Modal, Pressable } from 'native-base'
 import { AntDesign } from '@expo/vector-icons';
 import { Button } from './Button'
-import { ElementRef, useReducer, useRef, useState } from 'react';
+import { ElementRef, useEffect, useReducer, useRef, useState } from 'react';
 import SignatureScreen from 'react-native-signature-canvas';
 import * as FileSystem from "expo-file-system";
 
 type SignatureProps = {
     onFileSave: (file: FileSystem.FileInfo) => void
+    signature: FileSystem.FileInfo
 }
 
-export const Signature = ({ onFileSave }: SignatureProps) => {
+export const Signature = ({ onFileSave, signature }: SignatureProps) => {
     const [show, toggle] = useReducer(s => !s, false);
     const [signatureHeight, setSignatureHeight] = useState(0)
 
-    const [signature, setSignature] = useState('');
 
     const ref = useRef<ElementRef<typeof SignatureScreen>>();
 
     const handleEnd = () => {
         ref.current.readSignature()
     };
-
 
     const handleOk = async (signature: string) => {
 
@@ -34,7 +33,6 @@ export const Signature = ({ onFileSave }: SignatureProps) => {
 
         try {
             const file = await FileSystem.getInfoAsync(path)
-            setSignature(file.uri)
             onFileSave(file);
         } catch (error) {
             console.log({ error })
@@ -49,7 +47,7 @@ export const Signature = ({ onFileSave }: SignatureProps) => {
         <>
             <Button
                 onPress={toggle}
-                height={signature ? 200 : '45px'}
+                height={!!signature ? 200 : '45px'}
                 endIcon={!signature && <Icon
                     as={AntDesign}
                     name="right"
@@ -58,10 +56,8 @@ export const Signature = ({ onFileSave }: SignatureProps) => {
                 />}
             >
 
-                {signature ? <Image
-                    source={{
-                        uri: signature,
-                    }}
+                {!!signature ? <Image
+                    source={signature}
                     style={{ height: 200, width: 200 }}
                     alt="Signature"
                 /> :
