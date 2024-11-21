@@ -49,8 +49,10 @@ export const Review = ({ route, navigation }: ReviewProps) => {
                     materialId: load.materialId,
                     quantity: load.quantity,
                     paymentMethod: load.paymentMethod,
-                    signaturePath: load.signature.uri
+                    signaturePath: load.signature.uri,
+                    createdAt: load.createdAt
                 }
+                console.log({ newLoad })
                 await db.insert(loadSchema.load).values(newLoad)
                 fetchLocalNotSent()
             }

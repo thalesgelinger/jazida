@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react'
 import { Box, useToast } from 'native-base'
-import { LoadType } from '../pages/NewLoad';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import { useSQLiteContext } from 'expo-sqlite';
 import * as loadSchema from '../database/schema';
@@ -49,6 +48,7 @@ export const NotSentLoads = () => {
                     description: "Houve um erro ao fazer upload do carregamento"
                 })
 
+                console.log({...e})
                 console.error(e)
             }
         }

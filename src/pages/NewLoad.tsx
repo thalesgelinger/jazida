@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Box, Heading, Icon, Pressable, ScrollView, Text } from "native-base"
 import { SelectionButton } from "../components/SelectionButton"
 import { Input } from "../components/Input"
@@ -12,6 +12,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Unconnected } from "../components/Unconnected"
 import { NotSentLoads } from "../components/NotSentLoads"
 import { useResources } from "./useResorces"
+import { getLocalISOString } from "../utils/get-local-iso-string"
 
 type NewLoadProps = NativeStackScreenProps<RootStackParams, 'NewLoad'>;
 
@@ -22,6 +23,7 @@ export type LoadType = {
     quantity: string,
     paymentMethod: PaymentMethod,
     signature: FileSystem.FileInfo
+    createdAt: string,
 }
 
 export type PaymentMethod = "CASH" | "INSTALLMENT"
@@ -49,7 +51,8 @@ export const NewLoad = ({ navigation, route }: NewLoadProps) => {
             materialId,
             quantity,
             paymentMethod,
-            signature
+            signature,
+            createdAt: getLocalISOString()
         }
         cleanStates()
         navigation.push("Review", { load })

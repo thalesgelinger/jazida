@@ -1,0 +1,1 @@
+ALTER TABLE `loads` ADD `created_at` text DEFAULT (current_timestamp) NOT NULL;

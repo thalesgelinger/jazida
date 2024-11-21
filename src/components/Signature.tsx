@@ -1,7 +1,7 @@
 import { Box, Icon, Image, Modal, Pressable } from 'native-base'
 import { AntDesign } from '@expo/vector-icons';
 import { Button } from './Button'
-import { ElementRef, useEffect, useReducer, useRef, useState } from 'react';
+import { ElementRef, useReducer, useRef, useState } from 'react';
 import SignatureScreen from 'react-native-signature-canvas';
 import * as FileSystem from "expo-file-system";
 

@@ -14,6 +14,7 @@ export const useNotSentLoads = () => {
 
     const fetchLocalNotSent = async () => {
         const result = await db.query.load.findMany<LoadType[]>()
+        console.log("STORED: ", JSON.stringify(result, null, 2))
         setNotSentLoads(result)
     }
 

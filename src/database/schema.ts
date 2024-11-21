@@ -1,4 +1,5 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sql } from "drizzle-orm";
+import { sqliteTable, text, integer, } from "drizzle-orm/sqlite-core";
 
 export const load = sqliteTable("loads", {
     id: text("id").primaryKey(),
@@ -7,5 +8,8 @@ export const load = sqliteTable("loads", {
     materialId: integer("material_id").notNull(),
     quantity: text("quantity").notNull(),
     paymentMethod: text("payment_method").notNull(),
-    signaturePath: text("signature_path").notNull()
+    signaturePath: text("signature_path").notNull(),
+    createdAt: text('created_at')
+        .notNull()
+        .default(sql`(current_timestamp)`)
 })
